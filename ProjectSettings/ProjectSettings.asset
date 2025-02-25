@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: Namielle
-  productName: VFX_URP
+  productName: BurstDeffender
   defaultCursor: {fileID: 2800000, guid: 51ffbf8faf477ef40bf4cfbdb8bc0e70, type: 3}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -140,7 +140,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: 0.1.0
+  bundleVersion: 0.1.1
   preloadedAssets:
   - {fileID: -944628639613478452, guid: 5e760f1cbda7c7049b7ac699099915b8, type: 3}
   metroInputSource: 0
@@ -293,7 +293,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 3dedae8468c0239429df908ba8f5a82f, type: 3}
+      m_Icon: {fileID: 2800000, guid: ec77e978df08abb4889e1ed76a3bd3e8, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0

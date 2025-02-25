@@ -12,10 +12,10 @@ public class StageManager : MonoBehaviour
     [Header("Spawn Settings")]
     [SerializeField] // 敵のプレハブ
     GameObject enemyPrefab;
-    [SerializeField] // スポーン範囲の中心
-    Vector3 spawnAreaCenter;
-    [SerializeField] // スポーン範囲のサイズ(矩形)
-    Vector3 spawnAreaSize;
+    [SerializeField] // スポーン範囲の中心(デバッグ用)
+    Vector3 _spawnAreaCenter;
+    [SerializeField] // スポーン範囲のサイズ(デバッグ用)
+    Vector3 _spawnAreaSize;
     [SerializeField] // スポーン時のVFX
     GameObject spawnVFX;
     [SerializeField] // VFXと敵のスポーン間隔
@@ -168,6 +168,8 @@ public class StageManager : MonoBehaviour
     // ランダムなスポーン位置を取得
     Vector3 GetRandomSpawnPosition()
     {
+        Vector3 spawnAreaSize = stageDatas[GameManager.Instance.GetCurrentStage()].spawnAreaSize;
+
         Vector3 randomPosition = new Vector3(
             Random.Range(-spawnAreaSize.x / 2, spawnAreaSize.x / 2),
             50, // レイキャストを上方向から開始
@@ -184,7 +186,7 @@ public class StageManager : MonoBehaviour
             randomPosition.y = 0; // デフォルトの高さ
         }
 
-        return spawnAreaCenter + randomPosition;
+        return stageDatas[GameManager.Instance.GetCurrentStage()].spawnAreaCenter + randomPosition;
     }
 
     // 敵が倒されたときにカウント更新
@@ -222,9 +224,9 @@ public class StageManager : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = new Color(0, 1, 0, 0.3f);  // 緑色、透明度30%
-        Gizmos.DrawCube(spawnAreaCenter, spawnAreaSize);
+        Gizmos.DrawCube(_spawnAreaCenter, _spawnAreaSize);
 
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(spawnAreaCenter, spawnAreaSize);
+        Gizmos.DrawWireCube(_spawnAreaCenter, _spawnAreaSize);
     }
 }

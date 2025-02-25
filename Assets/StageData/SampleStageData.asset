@@ -25,4 +25,6 @@ MonoBehaviour:
     maxEnemiesOnField: 4
     firstSpawnDelay: 5
     spawnInterval: 10
+  spawnAreaCenter: {x: 0, y: 0, z: 0}
+  spawnAreaSize: {x: 10, y: 5, z: 10}
   playerSpawnPoint: {x: 0, y: 0, z: 0}
