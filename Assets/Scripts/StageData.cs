@@ -20,6 +20,10 @@ public class StageData : ScriptableObject
 {
     [NamedArray("Wave1", "Wave2", "LastWave", "これ以上設定はできません")]
     public WaveData[] waves; // 各Waveのデータ
+    [Header("スポーン範囲の中心")]
+    public Vector3 spawnAreaCenter;
+    [Header("スポーン範囲のサイズ(矩形)")]
+    public Vector3 spawnAreaSize;
     [Header("プレイヤーのスポーン位置")]
-    public Vector3 playerSpawnPoint; // プレイヤーのスポーン位置
+    public Vector3 playerSpawnPoint;
 }
