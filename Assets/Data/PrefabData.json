@@ -1,0 +1,32 @@
+{
+    "name": "Tree_01",
+    "components": [
+        "Transform",
+        "Tree",
+        "MeshFilter",
+        "MeshRenderer",
+        "CapsuleCollider"
+    ],
+    "materials": [
+        {
+            "name": "Optimized Bark Material",
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "texturePath": "diffuse_Tree01"
+        },
+        {
+            "name": "Optimized Leaf Material",
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "texturePath": "None"
+        }
+    ]
+}
