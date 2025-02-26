@@ -8,7 +8,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: mutant_M
-    second: {fileID: 2100000, guid: f22dfec74e7bfae41970469f3dde8ee0, type: 2}
+    second: {fileID: 2100000, guid: 2139af3fed6b1c046a4b4fb5599c824e, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
