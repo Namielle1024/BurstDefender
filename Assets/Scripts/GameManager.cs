@@ -150,6 +150,7 @@ public class GameManager : MonoBehaviour
         LockCursor();
 
         // ステージの初期化
+        StageManager.Instance.gameObject.SetActive(true);
         StageManager.Instance.SetupStage(currentStage);
 
         // プレイヤースポーン

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -18,8 +19,6 @@ public class PlayerManager : MonoBehaviour
     public int strongAttackDamage = 5; // JumpAttackのダメージ量
 
     bool isDead = false; // プレイヤーが死亡したかどうか
-    bool isPaused = false;
-    SceneType currentSceneType;
 
     void Awake()
     {
@@ -32,22 +31,6 @@ public class PlayerManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
-        }
-
-        // ゲームシーン以外では InputSystem を無効化
-        if (SceneType.Game == currentSceneType) // ← ゲームシーン名に合わせて変更
-        {
-            if (playerInput != null)
-            {
-                playerInput.Enable();
-            }
-        }
-        else
-        {
-            if (playerInput != null)
-            {
-                playerInput.Disable();
-            }
         }
 
         // PlayerInputの初期化
@@ -64,6 +47,19 @@ public class PlayerManager : MonoBehaviour
 
         // HPの初期化
         currentHP = maxHP;
+    }
+
+
+    /// <summary>
+    /// プレイヤーが非アクティブになったときに呼ばれるメソッド
+    /// </summary>
+    void OnDisable()
+    {
+        // オブジェクトが非アクティブになるときにInputSystemを無効化
+        if (playerInput != null)
+        {
+            playerInput.Player.Disable();
+        }
     }
 
     void SetupInputActions()

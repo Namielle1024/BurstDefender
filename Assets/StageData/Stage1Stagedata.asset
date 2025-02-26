@@ -26,5 +26,5 @@ MonoBehaviour:
     firstSpawnDelay: 5
     spawnInterval: 15
   spawnAreaCenter: {x: 0, y: 0, z: 0}
-  spawnAreaSize: {x: 100, y: 5, z: 100}
+  spawnAreaSize: {x: 50, y: 5, z: 50}
   playerSpawnPoint: {x: 5, y: 2, z: -10}
