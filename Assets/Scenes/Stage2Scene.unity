@@ -356,7 +356,7 @@ Transform:
   m_GameObject: {fileID: 1406196065}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -50, y: 0, z: -50}
+  m_LocalPosition: {x: -100, y: 0, z: -100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -380,7 +380,7 @@ TerrainCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_TerrainData: {fileID: 15600000, guid: 23b91ad80e621384c899fc3b2a12d69d, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: 15b2537916ba6be49b71519e829e46bc, type: 2}
   m_EnableTreeColliders: 1
 --- !u!218 &1406196068
 Terrain:

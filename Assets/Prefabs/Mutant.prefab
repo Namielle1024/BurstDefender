@@ -500,7 +500,7 @@ MonoBehaviour:
   moveSpeed: 5
   sprintSpeed: 8
   attackMoveSpeed: 2
-  jumpHeight: 10
+  jumpHeight: 5
   jumpDuration: 1
   gravity: 20
   jumpCurve:
