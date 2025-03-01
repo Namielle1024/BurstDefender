@@ -28,7 +28,6 @@ public class StageManager : MonoBehaviour
     int spawnEnemyCount = 0;
     int enemiesDefeated = 0;
     float waveCompleteDelay = 3.0f;　// Waveクリア後の待機時間
-    bool waveInProgress = false;
 
     void Awake()
     {
@@ -85,7 +84,6 @@ public class StageManager : MonoBehaviour
 
             spawnEnemyCount = 0;
             enemiesDefeated = 0;
-            waveInProgress = true;
 
             // Wave開始の演出
             yield return new WaitForSeconds(1.0f);
@@ -188,7 +186,6 @@ public class StageManager : MonoBehaviour
         currentEnemyCount = 0;
         spawnEnemyCount = 0;
         enemiesDefeated = 0;
-        waveInProgress = false;
     }
 
     // ランダムなスポーン位置を取得
