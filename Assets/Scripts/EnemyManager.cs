@@ -8,8 +8,8 @@ public class EnemyManager : MonoBehaviour
 {
     [Header("Enemy Stats")]
     [SerializeField] // 敵の最大HP
-    int maxHP = 100;
-    int currentHP; // 現在のHP
+    float maxHP = 100;
+    float currentHP; // 現在のHP
     int attackDamage = 10; // プレイヤーに与えるダメージ量
 
     [Header("HP UI")]
@@ -92,6 +92,7 @@ public class EnemyManager : MonoBehaviour
     {
         if (isDead) return;
 
+
         currentHP -= damage;
         currentHP = Mathf.Clamp(currentHP, 0, maxHP);
 
@@ -111,6 +112,20 @@ public class EnemyManager : MonoBehaviour
         {
             Death();
         }
+    }
+
+    /// <summary>
+    /// マグマダメージを受けたときの処理
+    /// </summary>
+    /// <param name="damage">スリップダメージ(毎フレーム)</param>
+    void TakeLavaDamage(float damage)
+    {
+        if (isDead) return;
+        currentHP -= damage;
+        currentHP = Mathf.Clamp(currentHP, 0, maxHP);
+
+        UpdateHPBar();
+
     }
 
     /// <summary>
@@ -279,9 +294,13 @@ public class EnemyManager : MonoBehaviour
             TakeDamage(PlayerManager.Instance.strongAttackDamage); // 強攻撃のダメージ
             //Debug.Log("敵は強攻撃を喰らった");
         }
+        if(other.CompareTag("Lava"))
+        {
+            TakeLavaDamage(0.1f);
+        }
     }
 
-    public int GetDamage()
+    public int GetAttackDamage()
     {
         return attackDamage;
     }

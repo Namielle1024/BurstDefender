@@ -8,11 +8,12 @@ public class PlayerManager : MonoBehaviour
     PlayerInput playerInput;
     PlayerAction playerAction;
     PlayerEffect playerEffect;
+    CharacterOutline characterOutline;
 
     [Header("Player Stats")]
     [SerializeField] // プレイヤーの最大HP
-    int maxHP = 100;
-    int currentHP; // 現在のHP
+    float maxHP = 100;
+    float currentHP; // 現在のHP
 
     [Header("Attack Settings")]
     public int weakAttackDamage = 10; // Hand攻撃のダメージ量
@@ -40,6 +41,7 @@ public class PlayerManager : MonoBehaviour
         // コンポーネント取得
         playerAction = GetComponent<PlayerAction>();
         playerEffect = GetComponent<PlayerEffect>();
+        characterOutline = GetComponent<CharacterOutline>();
 
         // InputSystemのアクションを設定
         SetupInputActions();
@@ -113,6 +115,11 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    void TakeLavaDamage(float damage)
+    {
+
+    }
+
     // プレイヤーが死亡したときの処理
     void Death()
     {
@@ -153,6 +160,14 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Lava"))
+        {
+            TakeLavaDamage(0.1f);
+        }
+    }
+
     public void ResetPlayer()
     {
         currentHP = maxHP;
@@ -179,7 +194,7 @@ public class PlayerManager : MonoBehaviour
     /// HPのゲッター
     /// </summary>
     /// <returns> currentHP </returns>
-    public int GetCurrentHP()
+    public float GetCurrentHP()
     {
         return currentHP;
     }
@@ -227,5 +242,6 @@ public class PlayerManager : MonoBehaviour
     public void SetCamera(Camera camera)
     {
         playerAction.SetCamera(camera);
+        characterOutline.SetCamera(camera);
     }
 }
