@@ -66,7 +66,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 2.2}
-  m_SizeDelta: {x: 1, y: 0.1}
+  m_SizeDelta: {x: 1.02, y: 0.12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6436865700457786971
 CanvasRenderer:
@@ -427,7 +427,7 @@ PrefabInstance:
     - target: {fileID: -9106337904210995862, guid: 5d0d7245590b79b46916fb83fa0fe5ec, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
-      objectReference: {fileID: 2100000, guid: 075a8a1300c2a45498e72bb3bca6f4f4, type: 2}
+      objectReference: {fileID: 2100000, guid: 1f1a3daa8d2bd18409715dbacda22c26, type: 2}
     - target: {fileID: -8679921383154817045, guid: 5d0d7245590b79b46916fb83fa0fe5ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -491,7 +491,7 @@ PrefabInstance:
     - target: {fileID: 2234995421923447144, guid: 5d0d7245590b79b46916fb83fa0fe5ec, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
-      objectReference: {fileID: 2100000, guid: 075a8a1300c2a45498e72bb3bca6f4f4, type: 2}
+      objectReference: {fileID: 2100000, guid: d185709d777ac7a49ad8b52f5ea15d7a, type: 2}
     - target: {fileID: 2544741779536303783, guid: 5d0d7245590b79b46916fb83fa0fe5ec, type: 3}
       propertyPath: m_Materials.Array.size
       value: 1
@@ -515,7 +515,7 @@ PrefabInstance:
     - target: {fileID: 3707983018852226925, guid: 5d0d7245590b79b46916fb83fa0fe5ec, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
-      objectReference: {fileID: 2100000, guid: 075a8a1300c2a45498e72bb3bca6f4f4, type: 2}
+      objectReference: {fileID: 2100000, guid: 1f1a3daa8d2bd18409715dbacda22c26, type: 2}
     - target: {fileID: 5866666021909216657, guid: 5d0d7245590b79b46916fb83fa0fe5ec, type: 3}
       propertyPath: m_Controller
       value: 
@@ -560,7 +560,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3833698368681674931}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}

@@ -1,11 +1,7 @@
-using Unity.Cinemachine;
-using UnityEditor;
 using UnityEngine;
 
 public class ArrowVFX : MonoBehaviour
 {
-    EnemyManager enemyManager;
-
     Vector3 shootDirection;
     float speed;
     float lifetime;
@@ -30,7 +26,7 @@ public class ArrowVFX : MonoBehaviour
         if(!hasDealtDamage && other.CompareTag("Player"))
         {
             hasDealtDamage = true;
-            PlayerManager.Instance.TakeDamage(enemyManager.GetAttackDamage());
+            PlayerManager.Instance.TakeDamage(10);
             Destroy(gameObject);
         }
     }

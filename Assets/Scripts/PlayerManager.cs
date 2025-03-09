@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -34,9 +33,16 @@ public class PlayerManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        // PlayerInputの初期化
-        playerInput = new PlayerInput();
-        playerInput.Player.Enable();
+        if (GameManager.Instance.currentSceneType == SceneType.Game)
+        {
+            // PlayerInputの初期化
+            playerInput = new PlayerInput();
+            playerInput.Player.Enable();
+        }
+        else
+        {
+            playerInput.Disable();
+        }
 
         // コンポーネント取得
         playerAction = GetComponent<PlayerAction>();
@@ -117,7 +123,23 @@ public class PlayerManager : MonoBehaviour
 
     void TakeLavaDamage(float damage)
     {
+        if (isDead) return;
+        playerEffect.StopTrailEffect();
 
+        // HPを減少
+        currentHP -= damage;
+
+        // HPゲージ更新
+        UIManager.Instance.UpdateHPBar(currentHP, maxHP);
+        UIManager.Instance.ShowDamageEffect();
+
+        // HPが0以下の場合、ゲームオーバー処理を実行
+        if (currentHP <= 0 && !isDead)
+        {
+            isDead = true;
+            currentHP = 0;
+            Death();
+        }
     }
 
     // プレイヤーが死亡したときの処理
