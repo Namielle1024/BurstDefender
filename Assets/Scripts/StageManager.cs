@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// ステージ全体の管理を行うクラス。
+/// 敵のスポーン、Wave進行、プレイヤーのスポーン位置管理などを担当。
+/// </summary>
 public class StageManager : MonoBehaviour
 {
     public static StageManager Instance;
@@ -11,24 +15,22 @@ public class StageManager : MonoBehaviour
     public StageData[] stageDatas;
 
     [Header("Spawn Settings")]
-    [SerializeField] // 敵のプレハブ
-    GameObject enemyPrefab;
-    [SerializeField] // スポーン範囲の中心(デバッグ用)
-    Vector3 _spawnAreaCenter;
-    [SerializeField] // スポーン範囲のサイズ(デバッグ用)
-    Vector3 _spawnAreaSize;
-    [SerializeField] // スポーン時のVFX
-    GameObject spawnVFX;
-    [SerializeField] // VFXと敵のスポーン間隔
-    float spawnInterval = 1.0f;
+    [SerializeField] GameObject enemyPrefab;  // 敵のプレハブ
+    [SerializeField] Vector3 _spawnAreaCenter; // スポーン範囲の中心（デバッグ用）
+    [SerializeField] Vector3 _spawnAreaSize;  // スポーン範囲のサイズ（デバッグ用）
+    [SerializeField] GameObject spawnVFX; // スポーン時のVFX
+    [SerializeField] float spawnInterval = 1.0f; // VFXと敵のスポーン間隔
 
-    List<GameObject> activeEnemies = new List<GameObject>();
-    int currentWave = 0;
-    int currentEnemyCount = 0;
-    int spawnEnemyCount = 0;
-    int enemiesDefeated = 0;
-    float waveCompleteDelay = 3.0f;　// Waveクリア後の待機時間
+    List<GameObject> activeEnemies = new List<GameObject>(); // 現在フィールド上にいる敵リスト
+    int currentWave = 0; // 現在のWave
+    int currentEnemyCount = 0; // 現在フィールドにいる敵の数
+    int spawnEnemyCount = 0; // すでにスポーンした敵の数
+    int enemiesDefeated = 0; // 倒された敵の数
+    float waveCompleteDelay = 3.0f; // Waveクリア後の待機時間
 
+    /// <summary>
+    /// シングルトンの初期化を行う。
+    /// </summary>
     void Awake()
     {
         if (Instance == null)
@@ -45,37 +47,39 @@ public class StageManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    void OnDestroy()
-    {
-        // イベント登録解除
-        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
     /// <summary>
-    /// シーンロード時に呼び出される
+    /// シーンロード時に呼び出される。
     /// </summary>
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // ゲームシーン以外では非アクティブ化
-        if (GameManager.Instance.currentSceneType == SceneType.Game)
-        {
-            gameObject.SetActive(true);
-        }
-        else
-        {
-            gameObject.SetActive(false);
-        }
+        gameObject.SetActive(GameManager.Instance.currentSceneType == SceneType.Game);
     }
 
+    void OnDestroy()
+    {
+        // シーンアンロード時にイベントを解除
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    /// <summary>
+    /// 総ステージ数を取得。
+    /// </summary>
     public int TotalStages => stageDatas.Length;
 
-    // ステージ設定
+    /// <summary>
+    /// 指定されたステージをセットアップする。
+    /// </summary>
+    /// <param name="stageIndex">ステージのインデックス</param>
     public void SetupStage(int stageIndex)
     {
         ClearStageData();
         StartCoroutine(WaveRoutine(stageDatas[stageIndex]));
     }
 
+    /// <summary>
+    /// Wave進行処理を管理するコルーチン。
+    /// </summary>
     IEnumerator WaveRoutine(StageData stageData)
     {
         for (currentWave = 0; currentWave < stageData.waves.Length; currentWave++)
@@ -95,7 +99,7 @@ public class StageManager : MonoBehaviour
 
             yield return StartCoroutine(SpawnWave(wave));
 
-            // Waveが完了するまで待つ
+            // Waveが完了するまで待機
             while (currentEnemyCount > 0)
             {
                 yield return null;
@@ -110,6 +114,9 @@ public class StageManager : MonoBehaviour
         GameManager.Instance.OnStageCleared();
     }
 
+    /// <summary>
+    /// Waveに従って敵をスポーンする。
+    /// </summary>
     IEnumerator SpawnWave(WaveData wave)
     {
         while (spawnEnemyCount < wave.enemyCount)
@@ -122,7 +129,9 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    // 敵をスポーンする処理
+    /// <summary>
+    /// 敵をスポーンする処理。
+    /// </summary>
     IEnumerator SpawnEnemy()
     {
         Vector3 spawnPosition;
@@ -134,17 +143,14 @@ public class StageManager : MonoBehaviour
         {
             spawnPosition = GetRandomSpawnPosition();
 
-            // スポーン位置の真下に地面があるか確認
-            RaycastHit hit;
-            if (Physics.Raycast(spawnPosition + Vector3.up * 50, Vector3.down, out hit, Mathf.Infinity))
+            if (Physics.Raycast(spawnPosition + Vector3.up * 50, Vector3.down, out RaycastHit hit, Mathf.Infinity))
             {
-                if (hit.collider.CompareTag("Ground"))  // 地面タグがあるオブジェクトのみ
+                if (hit.collider.CompareTag("Ground"))
                 {
-                    spawnPosition.y = hit.point.y; // 地形の高さを取得
+                    spawnPosition.y = hit.point.y;
 
                     // スポーンVFXを生成
                     GameObject vfx = Instantiate(spawnVFX, spawnPosition, Quaternion.identity);
-
                     validPositionFound = true;
 
                     yield return new WaitForSeconds(spawnInterval);
@@ -161,7 +167,6 @@ public class StageManager : MonoBehaviour
             }
             attempts++;
         }
-        
 
         if (!validPositionFound)
         {
@@ -169,7 +174,9 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    // ステージデータのクリア
+    /// <summary>
+    /// ステージデータをクリアする。
+    /// </summary>
     public void ClearStageData()
     {
         Debug.Log("ステージデータをクリアします...");
@@ -188,31 +195,35 @@ public class StageManager : MonoBehaviour
         enemiesDefeated = 0;
     }
 
-    // ランダムなスポーン位置を取得
+    /// <summary>
+    /// ランダムなスポーン位置を取得する。
+    /// </summary>
+    /// <returns>ランダムなスポーン位置</returns>
     Vector3 GetRandomSpawnPosition()
     {
         Vector3 spawnAreaSize = stageDatas[GameManager.Instance.GetCurrentStage()].spawnAreaSize;
 
         Vector3 randomPosition = new Vector3(
             Random.Range(-spawnAreaSize.x / 2, spawnAreaSize.x / 2),
-            50, // レイキャストを上方向から開始
+            50,
             Random.Range(-spawnAreaSize.z / 2, spawnAreaSize.z / 2)
         );
 
-        RaycastHit hit;
-        if (Physics.Raycast(randomPosition, Vector3.down, out hit, Mathf.Infinity))
+        if (Physics.Raycast(randomPosition, Vector3.down, out RaycastHit hit, Mathf.Infinity))
         {
-            randomPosition.y = hit.point.y; // 地形の高さを設定
+            randomPosition.y = hit.point.y;
         }
         else
         {
-            randomPosition.y = 0; // デフォルトの高さ
+            randomPosition.y = 0;
         }
 
         return stageDatas[GameManager.Instance.GetCurrentStage()].spawnAreaCenter + randomPosition;
     }
 
-    // 敵が倒されたときにカウント更新
+    /// <summary>
+    /// 敵が倒されたときの処理。
+    /// </summary>
     public void OnEnemyDefeated(GameObject enemy)
     {
         if (activeEnemies.Contains(enemy))
@@ -222,28 +233,17 @@ public class StageManager : MonoBehaviour
             currentEnemyCount--;
             enemiesDefeated++;
 
-            // 残敵数のUIを更新
             UIManager.Instance.UpdateEnemyGauge(GetWaveDefeatedCount(), GetWaveEnemyCount());
         }
     }
 
-    // プレイヤーのスポーンポイントを取得
-    public Vector3 GetPlayerSpawnPoint()
-    {
-        return stageDatas[GameManager.Instance.GetCurrentStage()].playerSpawnPoint;
-    }
+    public Vector3 GetPlayerSpawnPoint() => stageDatas[GameManager.Instance.GetCurrentStage()].playerSpawnPoint;
+    public int GetWaveEnemyCount() => stageDatas[GameManager.Instance.GetCurrentStage()].waves[currentWave].enemyCount;
+    public int GetWaveDefeatedCount() => enemiesDefeated;
 
-    public int GetWaveEnemyCount()
-    {
-        return stageDatas[GameManager.Instance.GetCurrentStage()].waves[currentWave].enemyCount;
-    }
-
-    public int GetWaveDefeatedCount()
-    {
-        return enemiesDefeated;
-    }
-
-    // Spawn Areaの可視化（Sceneビュー）
+    /// <summary>
+    /// Spawn Areaの可視化（Sceneビュー） 
+    /// </summary>
     void OnDrawGizmos()
     {
         Gizmos.color = new Color(0, 1, 0, 0.3f);  // 緑色、透明度30%
