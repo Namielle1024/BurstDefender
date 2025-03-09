@@ -7,7 +7,6 @@ public class PlayerManager : MonoBehaviour
     PlayerInput playerInput;
     PlayerAction playerAction;
     PlayerEffect playerEffect;
-    CharacterOutline characterOutline;
 
     [Header("Player Stats")]
     [SerializeField] // プレイヤーの最大HP
@@ -47,7 +46,6 @@ public class PlayerManager : MonoBehaviour
         // コンポーネント取得
         playerAction = GetComponent<PlayerAction>();
         playerEffect = GetComponent<PlayerEffect>();
-        characterOutline = GetComponent<CharacterOutline>();
 
         // InputSystemのアクションを設定
         SetupInputActions();
@@ -264,6 +262,5 @@ public class PlayerManager : MonoBehaviour
     public void SetCamera(Camera camera)
     {
         playerAction.SetCamera(camera);
-        characterOutline.SetCamera(camera);
     }
 }
