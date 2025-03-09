@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: 42375d2e1d7b61744887ddc5186b7605
-timeCreated: 1451312188
-licenseType: Store
+guid: 8205102d751494c4f92936a2c16a5adb
 NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
@@ -10,6 +10,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 52977
   packageName: Nature Starter Kit 2
-  packageVersion: 1.0
+  packageVersion: 
   assetPath: Assets/NatureStarterKit2/Materials/bush02.mat
-  uploadId: 96407
+  uploadId: 0

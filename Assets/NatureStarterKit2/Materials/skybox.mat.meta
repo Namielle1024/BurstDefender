@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: 39cace2863926444a9a78daa8ae26413
-timeCreated: 1451416464
-licenseType: Store
+guid: 14e2a45029837264387896f27143fbda
 NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
@@ -10,6 +10,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 52977
   packageName: Nature Starter Kit 2
-  packageVersion: 1.0
+  packageVersion: 
   assetPath: Assets/NatureStarterKit2/Materials/skybox.mat
-  uploadId: 96407
+  uploadId: 0

@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 2
+  m_RequiresDepthTextureOption: 1
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
@@ -150,7 +150,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b8c9d7c43fafef4aa847d987dcf7da3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 3589818802516797912, guid: e90805a7d528e3148a1c806824aca7c6, type: 3}
   distance: 5
   rotationSpeed: 5
   lookAtHeightOffset: 1.5

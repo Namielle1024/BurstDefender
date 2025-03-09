@@ -10,6 +10,7 @@ TagManager:
   - Arrow
   - Ground
   - DamageEffect
+  - Lava
   layers:
   - Default
   - TransparentFX

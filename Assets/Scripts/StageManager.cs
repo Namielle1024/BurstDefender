@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StageManager : MonoBehaviour
 {
@@ -27,7 +28,6 @@ public class StageManager : MonoBehaviour
     int spawnEnemyCount = 0;
     int enemiesDefeated = 0;
     float waveCompleteDelay = 3.0f;　// Waveクリア後の待機時間
-    bool waveInProgress = false;
 
     void Awake()
     {
@@ -39,6 +39,31 @@ public class StageManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+
+        // シーンロード時のイベント登録
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDestroy()
+    {
+        // イベント登録解除
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    /// <summary>
+    /// シーンロード時に呼び出される
+    /// </summary>
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // ゲームシーン以外では非アクティブ化
+        if (GameManager.Instance.currentSceneType == SceneType.Game)
+        {
+            gameObject.SetActive(true);
+        }
+        else
+        {
+            gameObject.SetActive(false);
         }
     }
 
@@ -59,7 +84,6 @@ public class StageManager : MonoBehaviour
 
             spawnEnemyCount = 0;
             enemiesDefeated = 0;
-            waveInProgress = true;
 
             // Wave開始の演出
             yield return new WaitForSeconds(1.0f);
@@ -162,7 +186,6 @@ public class StageManager : MonoBehaviour
         currentEnemyCount = 0;
         spawnEnemyCount = 0;
         enemiesDefeated = 0;
-        waveInProgress = false;
     }
 
     // ランダムなスポーン位置を取得

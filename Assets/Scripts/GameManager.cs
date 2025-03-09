@@ -115,8 +115,6 @@ public class GameManager : MonoBehaviour
     // 現在のシーンタイプに応じた初期化
     public void InitializeScene()
     {
-       // currentSceneType = (SceneType)UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex;
-
         // シーンタイプごとの初期化
         switch (currentSceneType)
         {
@@ -150,6 +148,7 @@ public class GameManager : MonoBehaviour
         LockCursor();
 
         // ステージの初期化
+        StageManager.Instance.gameObject.SetActive(true);
         StageManager.Instance.SetupStage(currentStage);
 
         // プレイヤースポーン

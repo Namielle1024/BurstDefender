@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: aa9fcb8764ab3324aa575a948d139c3a
-timeCreated: 1451316654
-licenseType: Store
+guid: ee82c9311ab249c4c9951787a709e8eb
 NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
@@ -10,6 +10,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 52977
   packageName: Nature Starter Kit 2
-  packageVersion: 1.0
+  packageVersion: 
   assetPath: Assets/NatureStarterKit2/Materials/bark02.mat
-  uploadId: 96407
+  uploadId: 0

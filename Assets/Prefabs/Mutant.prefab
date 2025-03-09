@@ -306,6 +306,14 @@ PrefabInstance:
       value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 5613815499662603714, guid: 224bd3b8e1c083540a3cdd055dbb614e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -4407679230795050791, guid: 224bd3b8e1c083540a3cdd055dbb614e, type: 3}
+    - target: {fileID: 5613815499662603714, guid: 224bd3b8e1c083540a3cdd055dbb614e, type: 3}
+      propertyPath: m_Quality
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5613815499662603714, guid: 224bd3b8e1c083540a3cdd055dbb614e, type: 3}
       propertyPath: m_Materials.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -316,7 +324,7 @@ PrefabInstance:
     - target: {fileID: 5613815499662603714, guid: 224bd3b8e1c083540a3cdd055dbb614e, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
-      objectReference: {fileID: 2100000, guid: 5d69df9d9d11e49d110086ba44295342, type: 2}
+      objectReference: {fileID: 2100000, guid: d185709d777ac7a49ad8b52f5ea15d7a, type: 2}
     - target: {fileID: 5866666021909216657, guid: 224bd3b8e1c083540a3cdd055dbb614e, type: 3}
       propertyPath: m_Controller
       value: 
@@ -352,6 +360,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 224bd3b8e1c083540a3cdd055dbb614e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3249128417472232882}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 224bd3b8e1c083540a3cdd055dbb614e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3013305969035462492}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 224bd3b8e1c083540a3cdd055dbb614e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5263691241440959533}
     - targetCorrespondingSourceObject: {fileID: -4728426434207774260, guid: 224bd3b8e1c083540a3cdd055dbb614e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8903691196729470249}
@@ -492,7 +506,7 @@ MonoBehaviour:
   moveSpeed: 5
   sprintSpeed: 8
   attackMoveSpeed: 2
-  jumpHeight: 10
+  jumpHeight: 7.5
   jumpDuration: 1
   gravity: 20
   jumpCurve:
@@ -557,8 +571,39 @@ MonoBehaviour:
   damage: {fileID: 8186485815968610795, guid: c3ca551aa8c384c4dbeae6ac41960146, type: 3}
   damageSpawnPoint: {fileID: 4071867594813425031}
   death: {fileID: 0}
+--- !u!114 &3013305969035462492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4222768427581338466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82a521776c44dc1418e725de15aba874, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCamera: {fileID: 7407833230323070345, guid: dc9af3c7ba375d44093a0c4a70371b2f, type: 3}
+  characterRenderer: {fileID: 8913581505659141105}
+--- !u!114 &5263691241440959533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4222768427581338466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 652910d139f814f4cb9a777c039ea6c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &7811287415352974320 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6502182839619065283, guid: 224bd3b8e1c083540a3cdd055dbb614e, type: 3}
+  m_PrefabInstance: {fileID: 3916759842231242291}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &8913581505659141105 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5613815499662603714, guid: 224bd3b8e1c083540a3cdd055dbb614e, type: 3}
   m_PrefabInstance: {fileID: 3916759842231242291}
   m_PrefabAsset: {fileID: 0}

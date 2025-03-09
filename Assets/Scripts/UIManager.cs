@@ -199,6 +199,11 @@ public class UIManager : MonoBehaviour
     /// <returns></returns>
     public bool IsPauseActive()
     {
+        if (uiController == null)
+        {
+            return true;
+        }
+
         return uiController.IsPauseActive();
     }
 }

@@ -1,8 +1,7 @@
 fileFormatVersion: 2
-guid: c63ea781a273235439e583799176c846
-timeCreated: 1451321767
-licenseType: Store
-NativeFormatImporter:
+guid: 03a55c795ed377342a20ad6b87c3a55a
+PrefabImporter:
+  externalObjects: {}
   userData: 
   assetBundleName: 
   assetBundleVariant: 
@@ -10,6 +9,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 52977
   packageName: Nature Starter Kit 2
-  packageVersion: 1.0
+  packageVersion: 
   assetPath: Assets/NatureStarterKit2/Nature/tree02.prefab
-  uploadId: 96407
+  uploadId: 0

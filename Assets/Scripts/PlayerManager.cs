@@ -7,19 +7,18 @@ public class PlayerManager : MonoBehaviour
     PlayerInput playerInput;
     PlayerAction playerAction;
     PlayerEffect playerEffect;
+    CharacterOutline characterOutline;
 
     [Header("Player Stats")]
     [SerializeField] // プレイヤーの最大HP
-    int maxHP = 100;
-    int currentHP; // 現在のHP
+    float maxHP = 100;
+    float currentHP; // 現在のHP
 
     [Header("Attack Settings")]
     public int weakAttackDamage = 10; // Hand攻撃のダメージ量
     public int strongAttackDamage = 5; // JumpAttackのダメージ量
 
     bool isDead = false; // プレイヤーが死亡したかどうか
-    bool isPaused = false;
-    SceneType currentSceneType;
 
     void Awake()
     {
@@ -34,29 +33,21 @@ public class PlayerManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        // ゲームシーン以外では InputSystem を無効化
-        if (SceneType.Game == currentSceneType) // ← ゲームシーン名に合わせて変更
+        if (GameManager.Instance.currentSceneType == SceneType.Game)
         {
-            if (playerInput != null)
-            {
-                playerInput.Enable();
-            }
+            // PlayerInputの初期化
+            playerInput = new PlayerInput();
+            playerInput.Player.Enable();
         }
         else
         {
-            if (playerInput != null)
-            {
-                playerInput.Disable();
-            }
+            playerInput.Disable();
         }
-
-        // PlayerInputの初期化
-        playerInput = new PlayerInput();
-        playerInput.Player.Enable();
 
         // コンポーネント取得
         playerAction = GetComponent<PlayerAction>();
         playerEffect = GetComponent<PlayerEffect>();
+        characterOutline = GetComponent<CharacterOutline>();
 
         // InputSystemのアクションを設定
         SetupInputActions();
@@ -64,6 +55,19 @@ public class PlayerManager : MonoBehaviour
 
         // HPの初期化
         currentHP = maxHP;
+    }
+
+
+    /// <summary>
+    /// プレイヤーが非アクティブになったときに呼ばれるメソッド
+    /// </summary>
+    void OnDisable()
+    {
+        // オブジェクトが非アクティブになるときにInputSystemを無効化
+        if (playerInput != null)
+        {
+            playerInput.Player.Disable();
+        }
     }
 
     void SetupInputActions()
@@ -117,6 +121,27 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    void TakeLavaDamage(float damage)
+    {
+        if (isDead) return;
+        playerEffect.StopTrailEffect();
+
+        // HPを減少
+        currentHP -= damage;
+
+        // HPゲージ更新
+        UIManager.Instance.UpdateHPBar(currentHP, maxHP);
+        UIManager.Instance.ShowDamageEffect();
+
+        // HPが0以下の場合、ゲームオーバー処理を実行
+        if (currentHP <= 0 && !isDead)
+        {
+            isDead = true;
+            currentHP = 0;
+            Death();
+        }
+    }
+
     // プレイヤーが死亡したときの処理
     void Death()
     {
@@ -157,6 +182,14 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Lava"))
+        {
+            TakeLavaDamage(0.1f);
+        }
+    }
+
     public void ResetPlayer()
     {
         currentHP = maxHP;
@@ -183,7 +216,7 @@ public class PlayerManager : MonoBehaviour
     /// HPのゲッター
     /// </summary>
     /// <returns> currentHP </returns>
-    public int GetCurrentHP()
+    public float GetCurrentHP()
     {
         return currentHP;
     }
@@ -231,5 +264,6 @@ public class PlayerManager : MonoBehaviour
     public void SetCamera(Camera camera)
     {
         playerAction.SetCamera(camera);
+        characterOutline.SetCamera(camera);
     }
 }
