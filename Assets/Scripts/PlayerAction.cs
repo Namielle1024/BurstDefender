@@ -11,32 +11,20 @@ public class PlayerAction : MonoBehaviour
     Animator animator;
 
     [Header("Movement Settings")]
-    [SerializeField] // 移動速度
-    float moveSpeed = 5f;
-    [SerializeField] // スプリント時の速度
-    float sprintSpeed = 8f;
-    [SerializeField] // 攻撃時の移動速度
-    float attackMoveSpeed = 2f;
-    [SerializeField] // ジャンプの高さ
-    float jumpHeight = 10f;
-    [SerializeField] // ジャンプの持続時間
-    float jumpDuration = 1.0f;
-    [SerializeField] // 重力
-    float gravity = 9.8f;
-    [SerializeField] // ジャンプの動きを制御するカーブ
-    AnimationCurve jumpCurve;
-    [SerializeField] // 蘇生時間
-    float reviveTime = 2.0f;
-    [SerializeField] // 地面レイヤー
-    LayerMask groundLayer;
-    [SerializeField] // カメラ
-    new Camera camera;
+    [SerializeField] float moveSpeed = 5f; // 通常の移動速度
+    [SerializeField] float sprintSpeed = 8f; // ダッシュ時の速度
+    [SerializeField] float attackMoveSpeed = 2f; // 攻撃時の移動速度
+    [SerializeField] float jumpHeight = 10f; // ジャンプの高さ
+    [SerializeField] float jumpDuration = 1.0f; // ジャンプ時間
+    [SerializeField] float gravity = 9.8f; // 重力の強さ
+    [SerializeField] AnimationCurve jumpCurve; // ジャンプのカーブ
+    [SerializeField] float reviveTime = 2.0f; // 蘇生時間
+    [SerializeField] LayerMask groundLayer; // 地面のレイヤー
+    [SerializeField] Camera camera; // メインカメラ
 
     [Header("Landing Settings")]
-    [SerializeField] // 地面までの距離閾値
-    float landingThreshold = 1.0f;
-    [SerializeField] // 着地判定の間隔
-    float landingCheckInterval = 0.5f;
+    [SerializeField] float landingThreshold = 1.0f; // 着地判定の距離
+    [SerializeField] float landingCheckInterval = 0.5f; // 着地判定の間隔
 
     Vector2 moveInput;
     bool isJumping = false;
@@ -47,10 +35,8 @@ public class PlayerAction : MonoBehaviour
     float idleTime = 0.0f;
     float idleThreshold = 10.0f;
 
-    [NonSerialized]
-    public static bool isWeakAttackingJudgement = false;   // 弱攻撃当たり判定制御用フラグ
-    [NonSerialized]
-    public static bool isStrongAttackingJudgement = false; // 強攻撃当たり判定制御用フラグ
+    [NonSerialized] public static bool isWeakAttackingJudgement = false;   // 弱攻撃当たり判定制御用フラグ
+    [NonSerialized] public static bool isStrongAttackingJudgement = false; // 強攻撃当たり判定制御用フラグ
 
     void Awake()
     {
@@ -72,6 +58,9 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// プレイヤーの移動を処理する
+    /// </summary>
     void HandleMovement()
     {
         bool isGrounded = CheckIfGrounded();
@@ -111,6 +100,9 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// プレイヤーに重力を適用する
+    /// </summary>
     void ApplyGravity()
     {
         if (!CheckIfGrounded())
@@ -119,6 +111,9 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// プレイヤーのアイドル状態を処理する
+    /// </summary>
     void HandleIdleState()
     {
         if (moveInput == Vector2.zero)
@@ -137,6 +132,10 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 地面との衝突を判定
+    /// </summary>
+    /// <returns>地面に接地しているかどうか</returns>
     bool CheckIfGrounded()
     {
         // プレイヤーの位置から真下にレイキャストを飛ばして、地面接地をチェック
@@ -146,6 +145,11 @@ public class PlayerAction : MonoBehaviour
         return Physics.Raycast(ray, groundDistance, groundLayer);
     }
 
+    /// <summary>
+    /// プレイヤーのカメラの向きを基準に移動方向を取得
+    /// </summary>
+    /// <param name="input">移動の入力</param>
+    /// <returns>カメラ基準の移動ベクトル</returns>
     Vector3 GetCameraRelativeMovement(Vector2 input)
     {
         Vector3 forward = camera.transform.forward;
@@ -154,6 +158,11 @@ public class PlayerAction : MonoBehaviour
         return (forward * input.y + right * input.x).normalized;
     }
 
+    /// <summary>
+    /// プレイヤーの移動処理
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <param name="walk"></param>
     public void OnMove(Vector2 direction, bool walk)
     {
         if (isReviving) return;
@@ -162,6 +171,10 @@ public class PlayerAction : MonoBehaviour
         animator.SetBool("Walk", walk);
     }
 
+    /// <summary>
+    /// プレイヤーのダッシュ処理
+    /// </summary>
+    /// <param name="isSprinting"></param>
     public void OnSprint(bool isSprinting)
     {
         if (isReviving) return;
@@ -170,6 +183,9 @@ public class PlayerAction : MonoBehaviour
         animator.SetBool("Run", isSprinting);
     }
 
+    /// <summary>
+    /// プレイヤーのジャンプ処理
+    /// </summary>
     public async Task OnJump()
     {
         if (isReviving || isJumping || isAttacking || !CheckIfGrounded()) return;
@@ -197,6 +213,9 @@ public class PlayerAction : MonoBehaviour
         ChangeState(PlayerState.Idle);
     }
 
+    /// <summary>
+    /// 非同期でジャンプを処理
+    /// </summary>
     async Task JumpAsync()
     {
         float startTime = Time.time;
@@ -248,12 +267,19 @@ public class PlayerAction : MonoBehaviour
         ChangeState(PlayerState.Idle);
     }
 
+    /// <summary>
+    /// プレイヤーのインタラクト処理
+    /// </summary>
     public void OnInteract()
     {
         if (isReviving) return;
         Debug.Log("Interact action triggered");
     }
 
+    /// <summary>
+    /// プレイヤーの攻撃処理
+    /// </summary>
+    /// <param name="isStrong"></param>
     public void OnAttack(bool isStrong)
     {
         if (currentState == PlayerState.Attacking || currentState == PlayerState.Damaged) return;
@@ -276,6 +302,9 @@ public class PlayerAction : MonoBehaviour
         ChangeState(PlayerState.Attacking);
     }
 
+    /// <summary>
+    /// プレイヤーのダメージ処理
+    /// </summary>
     public void OnDamage()
     {
         if (isJumping) isJumping = false;
@@ -286,12 +315,18 @@ public class PlayerAction : MonoBehaviour
         animator.SetTrigger("Damage");
     }
 
+    /// <summary>
+    /// プレイヤーの死亡処理
+    /// </summary>
     public void OnDeath()
     {
         ChangeState(PlayerState.Dead);
         animator.Play("Mutant Dying");
     }
 
+    /// <summary>
+    /// プレイヤーの蘇生処理
+    /// </summary>
     public void OnRevived()
     {
         PlayerManager.Instance.inputDisable();
@@ -300,6 +335,9 @@ public class PlayerAction : MonoBehaviour
         Invoke(nameof(EndRevive), reviveTime);
     }
 
+    /// <summary>
+    /// 蘇生アニメーション終了後の処理
+    /// </summary>
     void EndRevive()
     {
         isReviving = false;
@@ -328,7 +366,7 @@ public class PlayerAction : MonoBehaviour
     /// <summary>
     /// プレイヤーの状態を変更する
     /// </summary>
-    /// <param name="newState"></param>
+    /// <param name="newState">新しい状態</param>
     void ChangeState(PlayerState newState)
     {
         if (currentState == newState) return;
@@ -338,6 +376,10 @@ public class PlayerAction : MonoBehaviour
     // アニメーションイベント用メソッド
     void WeakAttackEvent() => PlayerManager.Instance.SetAttackState(true, false);
     void StrongAttackEvent() => PlayerManager.Instance.SetAttackState(false, true);
+
+    /// <summary>
+    /// 攻撃アニメーション終了後の処理
+    /// </summary>
     void EndAttackEvent()
     {
         isAttacking = false;
@@ -367,6 +409,9 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// ダメージアニメーション終了後の処理
+    /// </summary>
     void EndDamageEvent()
     {
         PlayerManager.Instance.inputEnable();
@@ -376,7 +421,7 @@ public class PlayerAction : MonoBehaviour
     /// <summary>
     /// シーン遷移時にカメラを切り替えるメソッド
     /// </summary>
-    /// <param name="newCamera"></param>
+    /// <param name="newCamera">新しいカメラ</param>
     public void SetCamera(Camera newCamera)
     {
         camera = newCamera;

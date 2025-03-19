@@ -29,5 +29,10 @@ public class ArrowVFX : MonoBehaviour
             PlayerManager.Instance.TakeDamage(10);
             Destroy(gameObject);
         }
+
+        if (other.CompareTag("Ground"))
+        {
+            Destroy(gameObject);
+        }
     }
 }

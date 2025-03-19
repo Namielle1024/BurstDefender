@@ -3,56 +3,52 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
+    // 敵のマネージャーコンポーネント
     EnemyManager enemyManager;
 
-    // アニメーター
+    // アニメーターコンポーネント
     Animator animator;
 
-    // 状態管理
-    enum State { Idle, Run, Draw}
+    // 敵の行動状態
+    enum State { Idle, Run, Draw }
     State currentState = State.Idle;
 
-    // 距離のしきい値
-    [SerializeField] // プレイヤーを見つける範囲
-    float detectionRange = 15.0f;
-    [SerializeField] // Draw状態に移行する範囲
-    float attackRange = 5.0f;
+    [Header("Detection Settings")]
+    [SerializeField] float detectionRange = 15.0f; // プレイヤーを見つける範囲
+    [SerializeField] float attackRange = 5.0f;     // Draw状態に移行する範囲
 
-    // Run状態：移動速度や回転速度
-    [SerializeField] 
-    float runMoveSpeed = 2.0f;
-    [SerializeField] 
-    float rotationSpeed = 5.0f;
+    [Header("Movement Settings")]
+    [SerializeField] float runMoveSpeed = 2.0f;    // 走る速度
+    [SerializeField] float rotationSpeed = 5.0f;  // 回転速度
+    [SerializeField] float walkMoveSpeed = 0.01f; // Draw状態時の左右移動速度
 
-    // Draw状態：左右移動速度
-    [SerializeField] 
-    float walkMoveSpeed = 0.01f;
-
-    // 時間制御
+    // 状態の経過時間
     float stateTimer;
 
-    // Draw状態の行動確率
+    // Draw状態の際の射撃確率
     float shotProbability = 0.2f; // 初期確率（近づくほど上がる）
 
-    // 行動管理フラグ
-    bool isShooting;   // Shotアニメーション中にtrueになる
-    bool isWalking;    // Walkアニメーション中にtrueになる
-    bool isAnimationLocked; // Shotアニメーション後にtrueになリ、一定時間後にfalseになる
-    float animationLockTime = 3.0f; // Shotアニメーション後の固定時間
+    [Header("Animation Control")]
+    bool isShooting;   // Shotアニメーション中
+    bool isWalking;    // Walkアニメーション中
+    bool isAnimationLocked; // Shot後の硬直
+    float animationLockTime = 3.0f; // Shot後の硬直時間
 
     void Start()
     {
-        // コンポーネント取得
         animator = GetComponent<Animator>();
         enemyManager = GetComponent<EnemyManager>();
+
+        // 初期状態では矢を非アクティブ化
         enemyManager.ClearArrow();
     }
 
     void Update()
     {
-        // プレイヤーとの距離を測定
+        // プレイヤーとの距離を計算
         float distanceToPlayer = Vector3.Distance(transform.position, PlayerManager.Instance.transform.position);
 
+        // 現在の状態ごとに処理を分岐
         switch (currentState)
         {
             case State.Idle:
@@ -67,170 +63,182 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    // Idleの動作
+    /// <summary>
+    /// 待機（Idle）状態の挙動
+    /// </summary>
+    /// <param name="distanceToPlayer">プレイヤーとの距離</param>
     void IdleBehavior(float distanceToPlayer)
     {
+        // すでに死亡していたら処理をしない
         if (enemyManager.IsDead()) return;
 
+        // アニメーション設定
         animator.SetBool("Idle", true);
         animator.SetBool("Run", false);
         animator.SetBool("DrawIdle", false);
 
+        // 矢を持っている場合はクリアする
         enemyManager.ClearArrow();
 
+        // プレイヤーを検知したら走る状態へ遷移
         if (distanceToPlayer <= detectionRange && !isAnimationLocked)
         {
-            // プレイヤーを検知してRun状態へ遷移
             TransitionToState(State.Run);
-            //Debug.Log("現在の状態" + currentState);
         }
     }
 
-    // Runの動作
+    /// <summary>
+    /// 走る（Run）状態の挙動
+    /// </summary>
+    /// <param name="distanceToPlayer">プレイヤーとの距離</param>
     void RunBehavior(float distanceToPlayer)
     {
         if (enemyManager.IsDead()) return;
 
+        // アニメーション設定
         animator.SetBool("Idle", false);
         animator.SetBool("Run", true);
         animator.SetBool("DrawIdle", false);
 
+        // 矢を持っている場合はクリアする
         enemyManager.ClearArrow();
 
         // プレイヤーの方向を向く
         LookAtPlayer();
 
-        // 敵を前方に移動
+        // プレイヤーの方向に向かって移動
         transform.position += transform.forward * runMoveSpeed * Time.deltaTime;
 
+        // プレイヤーに近づいたらDraw状態へ
         if (distanceToPlayer <= attackRange)
         {
-            // 一定距離まで接近したらDraw状態へ遷移
             animator.SetTrigger("Draw");
             TransitionToState(State.Draw);
-            //Debug.Log("現在の状態" + currentState);
         }
-
-        if (distanceToPlayer >= detectionRange)
+        // プレイヤーが離れたらIdle状態へ
+        else if (distanceToPlayer >= detectionRange)
         {
-            
-            // 距離が離れたらIdle状態に戻る
             TransitionToState(State.Idle);
-            //Debug.Log("現在の状態" + currentState);
         }
     }
 
-    // Drawの動作
-    private void DrawBehavior(float distanceToPlayer)
+    /// <summary>
+    /// 攻撃準備（Draw）状態の挙動
+    /// </summary>
+    /// <param name="distanceToPlayer">プレイヤーとの距離</param>
+    void DrawBehavior(float distanceToPlayer)
     {
         if (enemyManager.IsDead()) return;
 
+        // アニメーション設定
         animator.SetBool("Idle", false);
         animator.SetBool("Run", false);
         animator.SetBool("DrawIdle", true);
 
+        // 矢をセットする
         enemyManager.SetArrow();
 
-        // 状態タイマーの更新
+        // 状態タイマーを更新
         stateTimer += Time.deltaTime;
 
-        // プレイヤーの方向を向く（Shot以外）
+        // 射撃アニメーション中は向きを変えない
         if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Shot"))
         {
             LookAtPlayer();
         }
 
-        // 1秒ごとに行動を選択する
+        // 1秒ごとにアクションを決定
         if (stateTimer >= 1.0f && !isShooting && !isWalking)
         {
             stateTimer = 0f;
 
-            // プレイヤーが近づくほどShot確率を上げる
+            // プレイヤーが近いほど射撃確率を上げる
             shotProbability = Mathf.Clamp01((attackRange - distanceToPlayer) / attackRange);
-
-            // ランダムな行動を選択
             float action = Random.value;
+
             if (action <= shotProbability)
             {
-                // 弓を射る
                 isShooting = true;
                 animator.SetTrigger("Shot");
                 StartCoroutine(HandleShot());
             }
             else if (action > 0.5f)
             {
-                // 左へ歩く
                 isWalking = true;
                 animator.SetTrigger("WalkLeft");
-                StartCoroutine(WalkLeftOrRight(-1)); // 左移動
+                StartCoroutine(WalkLeftOrRight(-1));
             }
             else
             {
-                // 右へ歩く
                 isWalking = true;
                 animator.SetTrigger("WalkRight");
-                StartCoroutine(WalkLeftOrRight(1)); // 右移動
+                StartCoroutine(WalkLeftOrRight(1));
             }
         }
 
-        // プレイヤーから離れた場合はRun状態に戻る
+        // プレイヤーが離れたらRun状態へ
         if (distanceToPlayer > attackRange)
         {
             TransitionToState(State.Run);
-            //Debug.Log("現在の状態" + currentState);
         }
     }
 
-    // プレイヤーを注視する
+    /// <summary>
+    /// プレイヤーの方向を向く
+    /// </summary>
     void LookAtPlayer()
     {
+        // プレイヤーの方向を計算
         Vector3 directionToPlayer = (PlayerManager.Instance.transform.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(directionToPlayer.x, 0, directionToPlayer.z)); // 水平回転のみ
+
+        // Y軸回転のみ行う
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(directionToPlayer.x, 0, directionToPlayer.z));
+
+        // スムーズに回転
         transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
     }
 
-    // 弓を射た後の処理
+    /// <summary>
+    /// 矢を射た後の処理
+    /// </summary>
     IEnumerator HandleShot()
     {
-        // Shotアニメーションが終了するまで待機
-        yield return new WaitForSeconds(0.25f); // アニメーションの時間に合わせる
-        isShooting = false; // フラグを解除
-
-        // Idle状態に移行し、〇秒間固定
+        yield return new WaitForSeconds(0.25f);
+        isShooting = false;
         TransitionToState(State.Idle);
-        //Debug.Log("現在の状態" + currentState);
-        isAnimationLocked = true; // Idle状態を固定
+        isAnimationLocked = true;
         yield return new WaitForSeconds(animationLockTime);
-        isAnimationLocked = false; // Idle固定解除
+        isAnimationLocked = false;
     }
 
-    // 左右に1秒かけて徐々に移動
+    /// <summary>
+    /// 左右移動アクション
+    /// </summary>
+    /// <param name="direction">-1なら左移動、1なら右移動</param>
     IEnumerator WalkLeftOrRight(int direction)
     {
-        float duration = 1.0f; // 移動時間
-        float elapsed = 0f; // 経過時間
-
-        // 左（-1）または右（1）方向に移動
+        float duration = 1.0f;
+        float elapsed = 0f;
         Vector3 moveDirection = transform.right * direction;
 
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-
             transform.position += moveDirection * walkMoveSpeed * Time.deltaTime;
-
-            yield return null; // 次のフレームまで待機
+            yield return null;
         }
 
         yield return new WaitForSeconds(0.25f);
         isWalking = false;
     }
 
-    // 状態遷移
+    /// <summary>
+    /// 敵の状態遷移
+    /// </summary>
     void TransitionToState(State newState)
     {
         currentState = newState;
-        stateTimer = 0f; // 状態タイマーをリセット
+        stateTimer = 0f;
     }
 
     void ShootArrowAnimation()

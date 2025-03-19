@@ -210,9 +210,6 @@ public class EnemyManager : MonoBehaviour
 
         isDead = true;
 
-        // レイヤーを「DeadEnemy」に変更
-        gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
-
         // 死亡アニメーションを再生
         animator.Play("Bow Death");
 

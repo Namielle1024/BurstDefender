@@ -38,8 +38,8 @@ public class TitleSceneManager : MonoBehaviour
         backButton.onClick.AddListener(ShowStartScreen);
     }
 
-    /// <summary> 
-    /// 初期画面表示
+    /// <summary>
+    /// スタート画面を表示し、ステージ選択画面を非表示にする。
     /// </summary>
     void ShowStartScreen()
     {
@@ -47,8 +47,8 @@ public class TitleSceneManager : MonoBehaviour
         stageSelectUI.SetActive(false);
     }
 
-    /// <summary> 
-    /// ステージ選択画面表示
+    /// <summary>
+    /// ステージ選択画面を表示し、スタート画面を非表示にする。
     /// </summary>
     void ShowStageSelect()
     {
@@ -57,8 +57,8 @@ public class TitleSceneManager : MonoBehaviour
         stageSelectUI.SetActive(true);
     }
 
-    /// <summary> 
-    /// スタートボタン押下時の処理
+    /// <summary>
+    /// ゲーム終了ボタンが押されたときの処理。
     /// </summary>
     public void OnExitButtonPressed()
     {
@@ -89,8 +89,8 @@ public class TitleSceneManager : MonoBehaviour
                 stageSelectButtons[i].onClick.RemoveAllListeners();
                 stageSelectButtons[i].onClick.AddListener(() => SceneManager.Instance.LoadStage(sampleStageIndex)); // サンプルシーンのステージID
 #else
-            // ビルド時は非表示
-            stageSelectButtons[i].gameObject.SetActive(false);
+                // ビルド時は非表示
+                stageSelectButtons[i].gameObject.SetActive(false);
 #endif
             }
             else
@@ -105,6 +105,7 @@ public class TitleSceneManager : MonoBehaviour
                 }
                 else
                 {
+                    // 未解放のステージはボタンを無効化
                     stageSelectButtons[i].interactable = false;
                 }
             }

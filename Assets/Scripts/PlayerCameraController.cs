@@ -3,16 +3,11 @@ using UnityEngine;
 
 public class PlayerCameraController : MonoBehaviour
 {
-    [SerializeField] 
-    float distance;                    // カメラとプレイヤーの距離
-    [SerializeField] 
-    float rotationSpeed;               // マウス入力に応じた回転速度
-    [SerializeField] 
-    float lookAtHeightOffset = 2.0f;   // プレイヤーの頭の高さに合わせるためのオフセット         
-    [SerializeField] 
-    float minVerticalAngle = -20.0f;   // 垂直回転の下限
-    [SerializeField] 
-    float maxVerticalAngle = 60.0f;    // 垂直回転の上限
+    [SerializeField] float distance;                    // カメラとプレイヤーの距離
+    [SerializeField] float rotationSpeed;               // マウス入力に応じた回転速度
+    [SerializeField] float lookAtHeightOffset = 2.0f;   // プレイヤーの頭の高さに合わせるためのオフセット         
+    [SerializeField] float minVerticalAngle = -20.0f;   // 垂直回転の下限
+    [SerializeField] float maxVerticalAngle = 60.0f;    // 垂直回転の上限
 
     PlayerManager player;       // プレイヤー
     float currentPitch = 0.0f;  // 垂直方向の回転角度

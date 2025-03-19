@@ -4,14 +4,23 @@ using UnityEngine.Video;
 
 public class ResultSceneManager : MonoBehaviour
 {
-    [SerializeField] 
+    // リザルトのテキスト表示
+    [SerializeField]
     Text resultText;
-    [SerializeField] 
+
+    // タイトルに戻るボタン
+    [SerializeField]
     Button returnToTitleButton;
+
+    // リザルト画面の動画プレイヤー
     [SerializeField]
     VideoPlayer videoPlayer;
+
+    // ゲームクリア時の動画
     [SerializeField]
     VideoClip gameClearVideo;
+
+    // ゲームオーバー時の動画
     [SerializeField]
     VideoClip gameOverVideo;
 
@@ -45,11 +54,18 @@ public class ResultSceneManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// タイトルシーンへ戻る
+    /// </summary>
     private void ReturnToTitle()
     {
         GameManager.Instance.ReturnToTitle();
     }
 
+    /// <summary>
+    /// 結果に応じた動画を再生する
+    /// </summary>
+    /// <param name="clip">再生する動画クリップ</param>
     void PlayResultVideo(VideoClip clip)
     {
         if (clip != null)
@@ -64,6 +80,11 @@ public class ResultSceneManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 時間に基づいてレインボーの色を計算する
+    /// </summary>
+    /// <param name="time">現在の時間</param>
+    /// <returns>時間に応じた色</returns>
     Color GetRainbowColor(float time)
     {
         // 時間に基づいて色を計算
