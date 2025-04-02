@@ -23,7 +23,7 @@ public class ArrowVFX : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(!hasDealtDamage && other.CompareTag("Player"))
+        if(!hasDealtDamage && other.CompareTag("Player") && !PlayerManager.Instance.isDead)
         {
             hasDealtDamage = true;
             PlayerManager.Instance.TakeDamage(10);

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -17,7 +18,7 @@ public class PlayerManager : MonoBehaviour
     public int weakAttackDamage = 10; // Hand攻撃のダメージ量
     public int strongAttackDamage = 5; // JumpAttackのダメージ量
 
-    bool isDead = false; // プレイヤーが死亡したかどうか
+    [NonSerialized] public bool isDead = false; // プレイヤーが死亡したかどうか
 
     void Awake()
     {

@@ -19,8 +19,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Global Settings")]
     public float bgmVolume = 0.5f; // BGMの音量
-    public float seVolume = 0.5f; // SEの音量
-    public SceneType currentSceneType; // 現在のシーンタイプ
+    public float seVolume = 0.5f;  // SEの音量
+    public SceneType currentSceneType; // 現在のシーンタイプ (Title, Game, Result)
 
     [Header("Game Settings")]
     [SerializeField] int maxStages = 2;    // 最大ステージ数
@@ -36,6 +36,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Title Settings")]
     bool isSelectMode = false;
+
+    [Header("Cursor Settings")]
+    [SerializeField] Texture2D cursorTexture; // カーソル画像
 
     /// <summary>
     /// シングルトンの初期化とマネージャーオブジェクトの生成
@@ -56,6 +59,10 @@ public class GameManager : MonoBehaviour
         sceneManager = Instantiate(sceneManager);
         stageManager = Instantiate(stageManager);
         uiManager = Instantiate(uiManager);
+
+        // カーソルの設定
+        Vector2 hotspot = new Vector2(cursorTexture.width / 2, 0);
+        Cursor.SetCursor(cursorTexture, hotspot, CursorMode.Auto);
     }
 
     /// <summary>
@@ -135,6 +142,7 @@ public class GameManager : MonoBehaviour
     void InitializeTitleScene()
     {
         Debug.Log("Title Scene Initialized");
+        AudioManager.Instance.PlaySceneBGM(currentSceneType);
         SetCursorState(true);
     }
 
@@ -144,7 +152,7 @@ public class GameManager : MonoBehaviour
     void InitializeGameScene()
     {
         Debug.Log("Game Scene Initialized");
-
+        AudioManager.Instance.PlaySceneBGM(currentSceneType);
         SetCursorState(false); // カーソルをロック
 
         // ステージとプレイヤーのセットアップ
@@ -159,6 +167,7 @@ public class GameManager : MonoBehaviour
     void InitializeResultScene()
     {
         Debug.Log("Result Scene Initialized");
+        AudioManager.Instance.PlaySceneBGM(currentSceneType);
         SetCursorState(true);
     }
 

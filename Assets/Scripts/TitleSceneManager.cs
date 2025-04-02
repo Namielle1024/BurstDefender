@@ -33,9 +33,23 @@ public class TitleSceneManager : MonoBehaviour
             ShowStartScreen();
         }
 
-        startButton.onClick.AddListener(ShowStageSelect);
-        exitButton.onClick.AddListener(OnExitButtonPressed);
-        backButton.onClick.AddListener(ShowStartScreen);
+        startButton.onClick.AddListener(() =>
+        {
+            AudioManager.Instance.PlayDecideSE();
+            ShowStageSelect();
+        });
+
+        exitButton.onClick.AddListener(() =>
+        {
+            AudioManager.Instance.PlayCancelSE();
+            OnExitButtonPressed();
+        });
+
+        backButton.onClick.AddListener(() =>
+        {
+            AudioManager.Instance.PlayCancelSE();
+            ShowStartScreen();
+        });
     }
 
     /// <summary>
@@ -101,7 +115,11 @@ public class TitleSceneManager : MonoBehaviour
                     int stageIndex = i + 2; // ステージ番号を適宜設定
                     stageSelectButtons[i].interactable = true;
                     stageSelectButtons[i].onClick.RemoveAllListeners();
-                    stageSelectButtons[i].onClick.AddListener(() => SceneManager.Instance.LoadStage(stageIndex));
+                    stageSelectButtons[i].onClick.AddListener(() =>
+                    {
+                        AudioManager.Instance.PlayDecideSE();
+                        SceneManager.Instance.LoadStage(stageIndex);
+                    });
                 }
                 else
                 {

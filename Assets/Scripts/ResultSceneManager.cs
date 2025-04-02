@@ -43,7 +43,11 @@ public class ResultSceneManager : MonoBehaviour
             resultText.text = "No Context";
         }
 
-        returnToTitleButton.onClick.AddListener(ReturnToTitle);
+        returnToTitleButton.onClick.AddListener(() =>
+        {
+            AudioManager.Instance.PlayDecideSE();
+            ReturnToTitle();
+        });
     }
 
     void Update()

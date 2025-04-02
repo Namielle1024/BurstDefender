@@ -50,6 +50,11 @@ public class EnemyManager : MonoBehaviour
     bool isDead = false; // 敵が死亡したかどうか
     bool isArrowSet = false;
 
+    [Header("Audio Settings")]
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip damageSE;
+    [SerializeField] AudioClip deathSE;
+
     Camera mainCamera;
     Task hideHPBarTask;
     bool isHiding = false;
@@ -100,6 +105,8 @@ public class EnemyManager : MonoBehaviour
 
         // ダメージアニメーションを再生
         animator.Play("Bow Damage");
+        // ダメージSEを再生
+        audioSource.PlayOneShot(damageSE);
 
         if (damageVFX != null && !IsDamageEffectActive())
         {
@@ -215,6 +222,17 @@ public class EnemyManager : MonoBehaviour
 
         // 一定時間後にデスポーン
         StartCoroutine(DespawnAfterDelay());
+    }
+
+    /// <summary>
+    /// 死亡SEを再生
+    /// </summary>
+    void PlayDeathSE()
+    {
+        if (deathSE != null)
+        {
+            audioSource.PlayOneShot(deathSE);
+        }
     }
 
     IEnumerator DespawnAfterDelay()

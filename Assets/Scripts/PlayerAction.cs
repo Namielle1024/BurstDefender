@@ -26,6 +26,15 @@ public class PlayerAction : MonoBehaviour
     [SerializeField] float landingThreshold = 1.0f; // 着地判定の距離
     [SerializeField] float landingCheckInterval = 0.5f; // 着地判定の間隔
 
+    [Header("Audio Settings")]
+    [SerializeField] AudioSource audioSource; // プレイヤーのAudioSource
+    [SerializeField] AudioClip weakChargeSE; // 弱攻撃チャージSE
+    [SerializeField] AudioClip strongChargeSE; // 強攻撃チャージSE
+    [SerializeField] AudioClip weakAttackSE; // 弱攻撃SE
+    [SerializeField] AudioClip strongAttackSE; // 強攻撃SE
+    [SerializeField] AudioClip damageSE; // ダメージSE
+    [SerializeField] AudioClip deathSE; // 死亡SE
+
     Vector2 moveInput;
     bool isJumping = false;
     bool isAttacking = false;
@@ -313,6 +322,7 @@ public class PlayerAction : MonoBehaviour
         PlayerManager.Instance.inputDisable();
         ChangeState(PlayerState.Damaged);
         animator.SetTrigger("Damage");
+        audioSource.PlayOneShot(damageSE);
     }
 
     /// <summary>
@@ -322,6 +332,17 @@ public class PlayerAction : MonoBehaviour
     {
         ChangeState(PlayerState.Dead);
         animator.Play("Mutant Dying");
+    }
+
+    /// <summary>
+    /// 死亡SEを再生
+    /// </summary>
+    void PlayDeathSE()
+    {
+        if (deathSE != null)
+        {
+            audioSource.PlayOneShot(deathSE);
+        }
     }
 
     /// <summary>
@@ -376,6 +397,12 @@ public class PlayerAction : MonoBehaviour
     // アニメーションイベント用メソッド
     void WeakAttackEvent() => PlayerManager.Instance.SetAttackState(true, false);
     void StrongAttackEvent() => PlayerManager.Instance.SetAttackState(false, true);
+
+    // SE再生用アニメーションイベントメソッド
+    void WeakChargeSEEvent() => audioSource.PlayOneShot(weakChargeSE);
+    void StrongChargeSEEvent() => audioSource.PlayOneShot(strongChargeSE);
+    void WeakAttackSEEvent() => audioSource.PlayOneShot(weakAttackSE);
+    void StrongAttackSEEvent() => audioSource.PlayOneShot(strongAttackSE);
 
     /// <summary>
     /// 攻撃アニメーション終了後の処理

@@ -59,12 +59,9 @@ public class UIController : MonoBehaviour
     [SerializeField]
     Button confimButton;
 
-    //[Header("Audio Settings")]
-    //[SerializeField] AudioSource bgmAudioSource;
-    //[SerializeField] AudioSource seAudioSource;
-
     void Awake()
     {
+        // 初期化時にポーズUIは非表示にしておく
         pauseUI.gameObject.SetActive(false);
     }
 
@@ -72,17 +69,40 @@ public class UIController : MonoBehaviour
     {
         SetActiveGameUI(false);
 
-        // ボタンイベントの設定
-        resumeButton.onClick.AddListener(ResumeGame);
-        titleButton.onClick.AddListener(ReturnToTitle);
-        tutorialButton.onClick.AddListener(ToggleExplanationUI);
-        confimButton.onClick.AddListener(ConfimTutorial);
+        // 各ボタンのイベント登録
+        resumeButton.onClick.AddListener(() =>
+        {
+            AudioManager.Instance.PlayClickSE();
+            ResumeGame();
+        });
 
-        // スライダーの初期化
+        titleButton.onClick.AddListener(() =>
+        {
+            AudioManager.Instance.PlayClickSE();
+            ReturnToTitle();
+        });
+
+        tutorialButton.onClick.AddListener(() =>
+        {
+            AudioManager.Instance.PlayClickSE();
+            ToggleExplanationUI();
+        });
+
+        confimButton.onClick.AddListener(() =>
+        {
+            AudioManager.Instance.PlayClickSE();
+            ConfimTutorial();
+        });
+
+        // スライダーに音量設定のイベントを登録
         bgmSlider.onValueChanged.AddListener(SetBGMVolume);
         seSlider.onValueChanged.AddListener(SetSEVolume);
     }
 
+    /// <summary>
+    /// ポーズ状態を切り替える
+    /// </summary>
+    /// <param name="pause">true: ポーズ, false: ポーズ解除</param>
     public void OnPause(bool pause)
     {
         if (pause)
@@ -98,37 +118,35 @@ public class UIController : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// ゲーム中のUIを一括で表示/非表示する
+    /// </summary>
+    /// <param name="active">表示状態</param>
     public void SetActiveGameUI(bool active)
     {
-        if (active)
+        // 各UIコンポーネントの表示状態を切り替える
+        BackImage.gameObject.SetActive(active);
+        currentWaveText.gameObject.SetActive(active);
+        playerBackground.gameObject.SetActive(active);
+        playerPortrait.gameObject.SetActive(active);
+        playerHPBar.gameObject.SetActive(active);
+        playerHPBarBack.gameObject.SetActive(active);
+        enemyCountText.gameObject.SetActive(active);
+        enemyCountGauge.gameObject.SetActive(active);
+        enemyCountGaugeBack.gameObject.SetActive(active);
+
+        // Wave UIだけは明示的に非表示化
+        if (!active)
         {
-            BackImage.gameObject.SetActive(true);
-            currentWaveText.gameObject.SetActive(true);
-            playerBackground.gameObject.SetActive(true);
-            playerPortrait.gameObject.SetActive(true);
-            playerHPBar.gameObject.SetActive(true);
-            playerHPBarBack.gameObject.SetActive(true);
-            enemyCountText.gameObject.SetActive(true);
-            enemyCountGauge.gameObject.SetActive(true);
-            enemyCountGaugeBack.gameObject.SetActive(true);
-        }
-        else
-        {
-            BackImage.gameObject.SetActive(false);
             waveImage.gameObject.SetActive(false);
             waveText.gameObject.SetActive(false);
-            currentWaveText.gameObject.SetActive(false);
-            playerBackground.gameObject.SetActive(false);
-            playerPortrait.gameObject.SetActive(false);
-            playerHPBar.gameObject.SetActive(false);
-            playerHPBarBack.gameObject.SetActive(false);
-            enemyCountText.gameObject.SetActive(false);
-            enemyCountGauge.gameObject.SetActive(false);
-            enemyCountGaugeBack.gameObject.SetActive(false);
         }
     }
 
+    /// <summary>
+    /// Wave開始演出を表示
+    /// </summary>
+    /// <param name="waveNumber">現在のWave番号</param>
     public void ShowWaveStart(int waveNumber)
     {
         if (waveText == null || waveImage == null) return;
@@ -140,6 +158,10 @@ public class UIController : MonoBehaviour
         Invoke(nameof(HideWaveText), displayTime);
     }
 
+    /// <summary>
+    /// Wave終了演出を表示
+    /// </summary>
+    /// <param name="waveNumber">現在のWave番号</param>
     public void ShowWaveComplete(int waveNumber)
     {
         if (waveText == null || waveImage == null) return;
@@ -151,6 +173,9 @@ public class UIController : MonoBehaviour
         Invoke(nameof(HideWaveText), displayTime);
     }
 
+    /// <summary>
+    /// Wave表示UIを非表示にする
+    /// </summary>
     void HideWaveText()
     {
         if (waveText == null || waveImage == null) return;
@@ -160,6 +185,10 @@ public class UIController : MonoBehaviour
         SetActiveGameUI(true);
     }
 
+    /// <summary>
+    /// 現在のWave数をテキストに表示
+    /// </summary>
+    /// <param name="waveNumber">現在のWave番号</param>
     public void SetCurrentWave(int waveNumber)
     {
         if (currentWaveText == null) return;
@@ -168,7 +197,11 @@ public class UIController : MonoBehaviour
         currentWaveText.text = $"{waveLabel} Wave";
     }
 
-    // プレイヤーのHPを更新
+    /// <summary>
+    /// プレイヤーのHPバーを更新
+    /// </summary>
+    /// <param name="currentHP">現在のHP</param>
+    /// <param name="maxHP">最大HP</param>
     public void UpdateHPBar(float currentHP, float maxHP)
     {
         if (playerHPBar == null || playerHPBarBack == null) return;
@@ -180,12 +213,17 @@ public class UIController : MonoBehaviour
         playerBackground.color = fillAmount <= 0.5f ? new Color(1, 0, 0, 1) : new Color(1, 1, 1, 1);
     }
 
-    // ダメージ時のエフェクト
+    /// <summary>
+    /// ダメージ時の点滅エフェクトを再生
+    /// </summary>
     public void ShowDamageEffect()
     {
         StartCoroutine(DamageFlash());
     }
 
+    /// <summary>
+    /// プレイヤーアイコンを赤く点滅させるコルーチン
+    /// </summary>
     IEnumerator DamageFlash()
     {
         for (int i = 0; i < 3; i++)
@@ -197,7 +235,11 @@ public class UIController : MonoBehaviour
         }
     }
 
-    // 敵の残数ゲージ更新
+    /// <summary>
+    /// 敵の残数ゲージを更新
+    /// </summary>
+    /// <param name="remaining">倒した数</param>
+    /// <param name="total">合計数</param>
     public void UpdateEnemyGauge(int remaining, int total)
     {
         if (enemyCountText == null || enemyCountGauge == null) return;
@@ -206,6 +248,9 @@ public class UIController : MonoBehaviour
         enemyCountGauge.fillAmount = 1 - ((float)remaining / total);
     }
 
+    /// <summary>
+    /// ポーズUI内「ゲームに戻る」ボタン処理
+    /// </summary>
     void ResumeGame()
     {
         GameManager.Instance.SetCursorState(false);
@@ -213,28 +258,37 @@ public class UIController : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    /// <summary>
+    /// ポーズUI内「タイトルへ戻る」ボタン処理
+    /// </summary>
     void ReturnToTitle()
     {
         Time.timeScale = 1;
         GameManager.Instance.ReturnToTitle();
     }
 
+    /// <summary>
+    /// BGM音量スライダーの設定
+    /// </summary>
+    /// <param name="volume">音量</param>
     void SetBGMVolume(float volume)
     {
-        //if (bgmAudioSource != null)
-        //{
-        //    bgmAudioSource.volume = volume;
-        //}
+        AudioManager.Instance.SetBGMVolume(volume);
     }
 
+
+    /// <summary>
+    /// SE音量スライダーの設定
+    /// </summary>
+    /// <param name="volume">音量</param>
     void SetSEVolume(float volume)
     {
-        //if (seAudioSource != null)
-        //{
-        //    seAudioSource.volume = volume;
-        //}
+        AudioManager.Instance.SetSEVolume(volume);
     }
 
+    /// <summary>
+    /// 操作説明UIの表示切り替え
+    /// </summary>
     void ToggleExplanationUI()
     {
         if (tutorialButton != null)
@@ -243,12 +297,18 @@ public class UIController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 操作説明画面を閉じる
+    /// </summary>
     void ConfimTutorial()
     {
         tutorialImage.SetActive(false);
     }
 
-
+    /// <summary>
+    /// ポーズUIが表示中かどうかを判定
+    /// </summary>
+    /// <returns>表示中ならtrue</returns>
     public bool IsPauseActive()
     {
         return pauseUI != null && pauseUI.activeSelf;
